@@ -1,4 +1,4 @@
-# IBI Scientific Calculator v1.0
+# IBI Scientific Calculator v1.1
 
 A free scientific calculator web app by India Business International, for school students, college students and professionals. It runs entirely in the browser, installs as an app (PWA) and works offline.
 
@@ -16,14 +16,21 @@ A free scientific calculator web app by India Business International, for school
 | Units | 15 categories, including Indian land units (cent, ground, guntha) and tola |
 | Constants | 36 CODATA 2018 / IAU constants with search, insert and copy |
 
+**Help assistant (v1.1):** a chat-style “how do I…” helper behind the ? button in the header. 57 topics with key steps, an example and a **Try it** button that loads the example; quick questions for School, College and Work; search with typo tolerance; works offline with no AI or network. ⌄ / Esc / Back minimise and keep the chat, ⟲ starts again, ✕ ends it.
+
 Also: light / dark switch, install banner and Install button, Share button (`ibi-share.js`), backup and restore of all data (JSON), offline service worker, edge-to-edge layout with two columns from 1000 px.
 
 ## Files
 
-- `index.html`, `app.css`, `app.js` (engine, Calculate tab, overlays, settings), `tools.js` (the other tabs)
+- `index.html`, `app.css`, `app.js` (engine, Calculate tab, overlays, settings), `tools.js` (the other tabs), `help.js` (help assistant and its knowledge base)
 - `lib/math-15.2.0.min.js`: math.js 15.2.0 (Apache-2.0, licence in `lib/MATHJS-LICENSE.txt`)
 - KaTeX 0.19.0 (MIT) is loaded from jsDelivr for the textbook display; the app works without it.
-- `sw.js` (cache `ibi-scicalc-v1-0`), `manifest.json` (id `/scientific-calculator/`), `icons/`, `og-banner.jpg`, `ibi-share.js`
+- `sw.js` (cache `ibi-scicalc-v1-1`), `manifest.json` (id `/scientific-calculator/`), `icons/`, `og-banner.jpg`, `ibi-share.js`
+
+## Versions
+
+- **v1.1** (27 Oct 2026): Help assistant; brackets in the textbook preview line are brighter.
+- **v1.0** (27 Oct 2026): first release.
 
 ## Release
 

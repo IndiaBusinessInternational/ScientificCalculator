@@ -1,4 +1,4 @@
-/* IBI Scientific Calculator v1.0 — styles. Edge to edge at every width (10px inner padding),
+/* IBI Scientific Calculator v1.1 — styles. Edge to edge at every width (10px inner padding),
    two columns from 1000px, 16px body text, light/dark themes. */
 :root {
   --bg: #000; --surface: #101218; --surface2: #181b23; --surface3: #20242e; --line: #2a2f3a;
@@ -321,3 +321,49 @@ body.layer-open .banner { display: none !important; }
   .pad.basic .k { min-height: 50px; }
   .graph-box { height: calc(100dvh - 190px); }
 }
+
+/* ---------- v1.1 help assistant (minimise keeps the chat; header ? button is the launcher) ---------- */
+.help-top { position: relative; }
+.help-top .pip { position: absolute; top: 2px; right: 0; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: var(--warn); color: #000; font: 700 12px/18px var(--font); text-align: center; }
+.hb-panel { position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; height: 88vh; height: 88dvh; display: flex; flex-direction: column; background: var(--surface); border-top: 1px solid var(--line); border-radius: 16px 16px 0 0; box-shadow: var(--shadow); overflow: hidden; }
+.hb-head { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; padding: 6px 6px 6px 10px; border-bottom: 1px solid var(--line); min-height: 56px; }
+.hb-head .mark { width: 26px; height: 26px; flex: 0 0 auto; }
+.hb-title { display: flex; flex-direction: column; min-width: 0; flex: 1 1 auto; }
+.hb-title b { font-size: 16px; color: var(--head); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hb-title small { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hb-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+.hb-msg { max-width: 92%; padding: 10px 12px; border-radius: 14px; font-size: 16px; line-height: 1.45; overflow-wrap: break-word; }
+.hb-msg p { margin: 0 0 6px; } .hb-msg p:last-child { margin-bottom: 0; }
+.hb-msg.bot { align-self: flex-start; background: var(--surface2); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.hb-msg.me { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+.hb-msg ol { margin: 4px 0 6px; padding-left: 22px; }
+.hb-msg li { margin: 3px 0; }
+.hb-q { font-weight: 700; color: var(--head); }
+.hb-ex code { font-size: 15px; }
+.hb-acts { margin: 8px 0 4px; }
+.hb-acts .btn { height: 40px; }
+.hb-rel { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; align-items: center; }
+.hb-rel > span { font-size: 13px; color: var(--muted); width: 100%; }
+.hb-foot { flex: 0 0 auto; border-top: 1px solid var(--line); padding: 8px 10px; padding-bottom: calc(8px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 8px; background: var(--surface); }
+.hb-levels { display: flex; gap: 6px; align-items: center; justify-content: space-between; }
+.hb-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.hb-chips::-webkit-scrollbar { display: none; }
+.hb-chip { flex: 0 0 auto; min-height: 36px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--accent); background: transparent; color: var(--text); font-size: 14px; text-align: left; }
+.hb-chip:hover { background: var(--key-op); }
+.hb-chip.sm { min-height: 34px; font-size: 14px; }
+.hb-sugg { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.hb-sugg button { text-align: left; min-height: 40px; padding: 8px 10px; border: 0; border-bottom: 1px solid var(--line); background: var(--surface2); font-size: 15px; }
+.hb-sugg button:last-child { border-bottom: 0; }
+.hb-form { display: flex; gap: 6px; }
+.hb-form .inp { flex: 1 1 auto; }
+.hb-form .btn { flex: 0 0 auto; padding: 0 16px; }
+body.help-open .banner { display: none !important; }
+@media (min-width: 700px) {
+  .hb-panel { left: auto; right: 16px; bottom: 16px; width: 420px; height: min(680px, calc(100dvh - 88px)); border: 1px solid var(--line); border-radius: 16px; }
+}
+/* v1.1: brackets and symbols in the textbook preview line are clearly visible */
+.natural { color: var(--text); }
+.natural .katex .mopen, .natural .katex .mclose, .natural .katex .delimsizing, .natural .katex .delimsizinginner, .natural .katex .mord.sqrt { color: var(--cyan); }
+.natural .katex .delimsizing, .natural .katex .mopen, .natural .katex .mclose { font-weight: 700; }
+.hb-body { overflow-x: hidden; }
+.hb-rel .hb-chip { flex: 0 1 auto; max-width: 100%; white-space: normal; text-align: left; line-height: 1.3; }

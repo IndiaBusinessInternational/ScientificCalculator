@@ -1,9 +1,9 @@
-/* IBI Scientific Calculator v1.0 — core: maths engine (math.js 15.2.0), number formatting,
+/* IBI Scientific Calculator v1.1 — core: maths engine (math.js 15.2.0), number formatting,
    the Calculate tab, history, memory and variables, settings, overlays, install and backup.
    The other tabs live in tools.js and use window.ISC. */
 (function () {
   'use strict';
-  const VERSION = '1.0';
+  const VERSION = '1.1';
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -1034,6 +1034,7 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       if (layers.length) { e.preventDefault(); closeTop(); return; }
+      if (window.ISC.helpEsc && window.ISC.helpEsc()) { e.preventDefault(); return; }
       if (currentTab === 'calc') { clearAll(); }
       return;
     }
@@ -1161,7 +1162,7 @@
     el.querySelector('#mFmt').addEventListener('click', openFormatSheet);
     el.querySelector('#mInstall').addEventListener('click', () => closeTop().then(doInstall));
     el.querySelector('#mShare').addEventListener('click', () => closeTop().then(() => { if (window.IBIShare) window.IBIShare.open(); else copyText(location.origin + location.pathname); }));
-    el.querySelector('#mHelp').addEventListener('click', () => closeTop().then(() => openHelp(currentTab)));
+    el.querySelector('#mHelp').addEventListener('click', () => closeTop().then(() => window.ISC.openHelp(currentTab)));
     el.querySelector('#mBackup').addEventListener('click', downloadBackup);
     el.querySelector('#mRestore').addEventListener('click', restoreBackup);
     el.querySelector('#mReset').addEventListener('click', async () => {
@@ -1200,7 +1201,18 @@
     katexReady: () => katexState === 'ready',
     insertToCalc(text) { goTab('calc'); justEvaluated = false; insertAtCaret(text); exprEl.focus({ preventScroll: true }); },
     setAngleForTool: (a) => { ANG = a; }, restoreAngle: () => { ANG = S.angle; },
-    get angle() { return ANG; }
+    get angle() { return ANG; },
+    get currentTab() { return currentTab; },
+    // Help bot "Try it": run a sum in the Calculate tab.
+    calcRun(expr) { goTab('calc'); justEvaluated = false; setExpr(expr); equals(); },
+    // Help bot "Try it" for a tool tab: merge the example into its saved state, rebuild the tab, then press its main button.
+    tryTab(name, patch, goSel) {
+      LS.set('t:' + name, Object.assign({}, LS.get('t:' + name, {}), patch));
+      const t = tabs[name], old = $('#view-' + name);
+      if (t && t.ready && old) { const fresh = old.cloneNode(false); old.replaceWith(fresh); t.ready = false; }
+      goTab(name);
+      if (goSel) setTimeout(() => { const b = $(goSel); if (b) b.click(); }, 60);
+    }
   };
 
   // ---------- boot ----------
