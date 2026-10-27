@@ -1,4 +1,4 @@
-/* IBI Scientific Calculator v1.1 — the tool tabs: Equations, Graph, Statistics, Matrix, Vector,
+/* IBI Scientific Calculator v1.2 — the tool tabs: Equations, Graph, Statistics, Matrix, Vector,
    Calculus, Base-N, Units and Constants. Uses window.ISC from app.js. */
 (function () {
   'use strict';

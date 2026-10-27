@@ -1,9 +1,9 @@
-/* IBI Scientific Calculator v1.1 — core: maths engine (math.js 15.2.0), number formatting,
+/* IBI Scientific Calculator v1.2 — core: maths engine (math.js 15.2.0), number formatting,
    the Calculate tab, history, memory and variables, settings, overlays, install and backup.
    The other tabs live in tools.js and use window.ISC. */
 (function () {
   'use strict';
-  const VERSION = '1.1';
+  const VERSION = '1.2';
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -755,6 +755,7 @@
     paintResult(last);
     justEvaluated = true;
     addHistory(src, f.text, f.html, ex);
+    maybeShowBanner();
     if (isAssign) toast(`Stored ${r.code.split('=')[0].trim()} = ${f.text}`);
     saveScope();
     paintMem();
@@ -1059,28 +1060,86 @@
   $('#themeTop').addEventListener('click', toggleTheme);
   matchMedia('(prefers-color-scheme: light)').addEventListener('change', paintTheme);
 
-  // ---------- install ----------
+  // ---------- install: the header button is always there (Founder: "Install button must") ----------
   let deferredPrompt = null;
-  const isInstalled = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  let installedKnown = !!LS.get('installedAt', 0);
+  const isInstalled = () => matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: minimal-ui)').matches || navigator.standalone === true;
   const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  function paintInstall() {
-    const can = !isInstalled() && (deferredPrompt || isIOS());
-    $('#installTop').hidden = !can;
-    const dismissed = LS.get('installDismissed', 0);
-    $('#installBanner').hidden = !can || (Date.now() - dismissed < 24 * 3600 * 1000);
-    if (isIOS()) $('#installBannerText').textContent = 'Tap Share, then “Add to Home Screen”.';
+  function browserKind() {
+    const ua = navigator.userAgent;
+    if (/FBAN|FBAV|FB_IAB|Instagram|WhatsApp|Line\/|Snapchat|LinkedInApp|Twitter|GSA\//i.test(ua) || (/Android/i.test(ua) && /; wv\)/.test(ua))) return 'inapp';
+    if (isIOS()) return /CriOS|FxiOS|EdgiOS/.test(ua) ? 'ios-other' : 'ios-safari';
+    if (/SamsungBrowser/i.test(ua)) return 'samsung';
+    if (/Android/i.test(ua)) return /Firefox/i.test(ua) ? 'android-firefox' : 'android-chrome';
+    if (/Edg\//.test(ua)) return 'edge';
+    if (/Firefox/i.test(ua)) return 'firefox';
+    if (/Chrome\//.test(ua)) return 'chrome';
+    if (/Safari/i.test(ua) && /Macintosh/i.test(ua)) return 'mac-safari';
+    return 'other';
   }
-  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; paintInstall(); });
-  window.addEventListener('appinstalled', () => { deferredPrompt = null; paintInstall(); toast('Installed. Open IBI Scientific Calculator from your home screen.'); });
+  const GUIDES = {
+    'android-chrome': ['Android phone: Chrome', ['Tap the menu <b>⋮</b> at the top right of Chrome.', 'Tap <b>Install app</b> (or <b>Add to Home screen</b> → <b>Install</b>).', 'Tap <b>Install</b>. The calculator icon appears on your home screen.']],
+    'samsung': ['Android phone: Samsung Internet', ['Tap the menu <b>≡</b> at the bottom right.', 'Tap <b>Add page to</b> → <b>Home screen</b> (or the install icon in the address bar).', 'Tap <b>Add</b>.']],
+    'android-firefox': ['Android phone: Firefox', ['Tap the menu <b>⋮</b>.', 'Tap <b>Install</b> (or <b>Add to Home screen</b>).', 'Tap <b>Add</b>.']],
+    'ios-safari': ['iPhone or iPad: Safari', ['Tap the <b>Share</b> button (the square with an arrow pointing up).', 'Scroll down and tap <b>Add to Home Screen</b>.', 'Tap <b>Add</b> at the top right.']],
+    'ios-other': ['iPhone or iPad: Chrome or another browser', ['Tap the <b>Share</b> button (in Chrome it is in the address bar).', 'Tap <b>Add to Home Screen</b>. If you do not see it, open this page in <b>Safari</b> and use Share → Add to Home Screen.', 'Tap <b>Add</b>.']],
+    'chrome': ['Laptop or desktop: Chrome', ['Click the <b>install icon</b> at the right end of the address bar (a screen with a down arrow).', 'Or open the menu <b>⋮</b> → <b>Cast, save and share</b> → <b>Install page as app</b>.', 'Click <b>Install</b>. It opens in its own window and from the Start menu.']],
+    'edge': ['Laptop or desktop: Microsoft Edge', ['Click the <b>App available</b> icon at the right end of the address bar.', 'Or open the menu <b>…</b> → <b>Apps</b> → <b>Install this site as an app</b>.', 'Click <b>Install</b>.']],
+    'mac-safari': ['Mac: Safari', ['Open the <b>File</b> menu (or the Share button).', 'Choose <b>Add to Dock</b>.', 'Click <b>Add</b>.']],
+    'firefox': ['Laptop or desktop: Firefox', ['Firefox on a computer cannot install web apps.', 'Open this page in <b>Chrome</b> or <b>Edge</b> and click Install there, or bookmark it.']],
+    'inapp': ['Inside WhatsApp, Instagram or another app', ['This page is open inside another app, which cannot install it.', 'Tap the menu <b>⋮</b> or <b>…</b> and choose <b>Open in Chrome</b> (Android) or <b>Open in Safari</b> (iPhone). Or copy the link below and paste it into Chrome or Safari.', 'Then tap <b>Install</b> at the top of the calculator.']],
+    'other': ['Other browsers', ['Open the browser menu and look for <b>Install app</b> or <b>Add to Home screen</b>.', 'If there is none, open this page in Chrome, Edge or Safari.']]
+  };
+  function paintInstall() {
+    const inApp = isInstalled();
+    const b = $('#installTop');
+    b.hidden = inApp;
+    document.body.classList.toggle('show-install', !inApp);
+    const done = installedKnown && !deferredPrompt;
+    b.querySelector('span').textContent = done ? 'Installed ✓' : 'Install';
+    b.title = done ? 'Already installed on this device' : 'Install IBI Scientific Calculator on this device';
+    b.setAttribute('aria-label', b.title);
+    if (inApp) $('#installBanner').hidden = true;
+  }
+  function maybeShowBanner() {
+    if (isInstalled() || installedKnown || maybeShowBanner.done) return;
+    if (Date.now() - LS.get('installDismissed', 0) < 24 * 3600 * 1000) return;
+    maybeShowBanner.done = true;
+    $('#installBanner').hidden = false;
+    clearTimeout(maybeShowBanner.t);
+    maybeShowBanner.t = setTimeout(() => { $('#installBanner').hidden = true; }, 15000);
+  }
+  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installedKnown = false; LS.del('installedAt'); paintInstall(); });
+  window.addEventListener('appinstalled', () => { deferredPrompt = null; installedKnown = true; LS.set('installedAt', Date.now()); $('#installBanner').hidden = true; paintInstall(); toast('Installed. Open IBI Scientific Calculator from your home screen.'); });
+  if (navigator.getInstalledRelatedApps) navigator.getInstalledRelatedApps().then((apps) => { if (apps && apps.length) { installedKnown = true; paintInstall(); } }).catch(() => { /* not supported here */ });
+  function installGuide() {
+    const kind = browserKind();
+    const order = [kind].concat(Object.keys(GUIDES).filter((k) => k !== kind && k !== 'other'));
+    const block = (k, main) => `<div class="${main ? 'ig-main' : 'ig-other'}"><h3>${GUIDES[k][0]}</h3><ol class="help-list">${GUIDES[k][1].map((x) => `<li>${x}</li>`).join('')}</ol></div>`;
+    const done = installedKnown ? '<div class="msg" style="margin:0 0 10px">It looks like the calculator is already installed on this device. Open it from your home screen or app list.</div>' : '';
+    const el = openLayer(`<div class="sheet">${sheetHead('Install IBI Scientific Calculator')}<div class="sheet-b">
+      ${done}<p style="margin:0 0 10px">Installing puts the calculator on your home screen like an app. It opens full screen and works with no internet. It is free and takes a few seconds.</p>
+      ${block(order[0], true)}
+      ${kind === 'inapp' ? `<div class="row" style="margin:6px 0 10px"><button type="button" class="btn" id="igCopy"><svg class="i"><use href="#i-copy"/></svg>Copy the link</button></div>` : ''}
+      <details class="ig-more"><summary>Steps for other phones and browsers</summary>${order.slice(1).map((k) => block(k, false)).join('')}</details>
+    </div><div class="sheet-f">${deferredPrompt ? '<button type="button" class="btn" id="igNative">Install now</button>' : ''}<button type="button" class="btn ghost" data-close>Close</button></div></div>`);
+    const c = el.querySelector('#igCopy'); if (c) c.addEventListener('click', () => copyText(location.origin + location.pathname));
+    const n = el.querySelector('#igNative'); if (n) n.addEventListener('click', () => closeTop().then(doInstall));
+  }
   async function doInstall() {
+    $('#installBanner').hidden = true;
+    if (isInstalled()) { toast('You are already using the installed app.'); return; }
     if (deferredPrompt) {
-      deferredPrompt.prompt();
-      try { await deferredPrompt.userChoice; } catch (e) { /* dismissed */ }
-      deferredPrompt = null; paintInstall();
-    } else if (isIOS()) {
-      openLayer(`<div class="sheet">${sheetHead('Install on iPhone or iPad')}<div class="sheet-b"><ol class="help-list"><li>Tap the <b>Share</b> button in Safari (the square with an arrow).</li><li>Scroll down and tap <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>.</li></ol></div></div>`);
-    } else if (isInstalled()) toast('Already installed.');
-    else toast('Open your browser menu (⋮) and choose “Install app” or “Add to Home screen”.');
+      const p = deferredPrompt;
+      deferredPrompt = null;
+      p.prompt();
+      let choice = null;
+      try { choice = await p.userChoice; } catch (e) { /* dismissed */ }
+      if (choice && choice.outcome === 'dismissed') toast('Not installed. Tap Install any time.');
+      paintInstall();
+      return;
+    }
+    installGuide();
   }
   $('#installTop').addEventListener('click', doInstall);
   $('#installBannerBtn').addEventListener('click', doInstall);
