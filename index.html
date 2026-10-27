@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IBI Scientific Calculator</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="India Business International">
+<meta property="og:title" content="IBI Scientific Calculator">
+<meta property="og:description" content="Free scientific calculator for school, college and work: fractions, trig, complex numbers, base-N, statistics and regression, matrices, vectors, equation solver, calculus, graphs and unit conversion.">
+<meta property="og:url" content="https://scientific.indiabusinessinternational.online/">
+<meta property="og:image" content="https://scientific.indiabusinessinternational.online/og-banner.jpg">
+<meta property="og:image:secure_url" content="https://scientific.indiabusinessinternational.online/og-banner.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="IBI Scientific Calculator: every kind of maths, from basic to advanced">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="IBI Scientific Calculator">
+<meta name="twitter:description" content="Free scientific calculator: fractions, trig, complex, base-N, statistics, matrices, equations, calculus, graphs and units.">
+<meta name="twitter:image" content="https://scientific.indiabusinessinternational.online/og-banner.jpg">
+<meta name="description" content="IBI Scientific Calculator by India Business International: a free scientific calculator for students and professionals with fractions, trigonometry, complex numbers, base-N, statistics, regression, matrices, vectors, equation solver, calculus, graphing and unit conversion. Works offline.">
+<link rel="canonical" href="https://scientific.indiabusinessinternational.online/">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="IBI SciCalc">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/favicon-64.png" sizes="64x64">
+<script>try{var t=localStorage.getItem("isc:theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="app.css?v=1.0">
+<script src="ibi-share.js?v=1.0" defer data-slot="#topActions"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-hist" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 3"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4.5M12 17.5h.01"/></symbol>
+  <symbol id="i-kbd" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></symbol>
+  <symbol id="i-fn" viewBox="0 0 24 24"><path d="M14 4h-1.5a3 3 0 0 0-3 3v13M6 11h7M15 13l5 6M20 13l-5 6"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></symbol>
+  <symbol id="i-dl" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-ul" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24"><path d="M7 4L3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 9.5V21h14V9.5"/></symbol>
+  <symbol id="i-img" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></symbol>
+  <symbol id="i-install" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+  <symbol id="i-mark" viewBox="0 0 50 50"><g fill="#35C0ED"><circle cx="4" cy="5" r="2"/><circle cx="4" cy="15" r="2"/><circle cx="4" cy="25" r="2"/><circle cx="4" cy="35" r="2"/><circle cx="4" cy="45" r="2"/><circle cx="13" cy="5" r="2.7"/><circle cx="13" cy="15" r="2.7"/><circle cx="13" cy="25" r="2.7"/><circle cx="13" cy="35" r="2.7"/><circle cx="13" cy="45" r="2.7"/><circle cx="24" cy="5" r="3.5"/><circle cx="24" cy="15" r="3.5"/><circle cx="24" cy="25" r="3.5"/><circle cx="24" cy="35" r="3.5"/><circle cx="24" cy="45" r="3.5"/><circle cx="35" cy="5" r="4.3"/><circle cx="35" cy="15" r="4.3"/><circle cx="35" cy="25" r="4.3"/><circle cx="35" cy="35" r="4.3"/><circle cx="35" cy="45" r="4.3"/><circle cx="45" cy="5" r="4.6"/><circle cx="45" cy="15" r="4.6"/><circle cx="45" cy="25" r="4.6"/><circle cx="45" cy="35" r="4.6"/><circle cx="45" cy="45" r="4.6"/></g></symbol>
+</svg>
+
+<header class="topbar">
+  <span class="badge" id="versionBadge" title="App version">v1.0</span>
+  <a class="brand" href="#tab=calc" aria-label="IBI Scientific Calculator, home">
+    <svg class="mark" aria-hidden="true"><use href="#i-mark"/></svg>
+    <span class="brand-t"><b>IBI Scientific Calculator</b><small>India Business International</small></span>
+  </a>
+  <div class="top-actions" id="topActions">
+    <button type="button" class="top-btn" id="installTop" hidden><svg class="i"><use href="#i-install"/></svg><span>Install</span></button>
+    <button type="button" class="switch" id="themeTop" role="switch" aria-checked="true" aria-label="Dark theme" title="Light / dark"><span class="track"><span class="knob"></span></span></button>
+    <button type="button" class="iconbtn" id="menuBtn" aria-label="Menu and settings" title="Menu and settings"><svg class="i"><use href="#i-menu"/></svg></button>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs" aria-label="Calculator modes">
+  <button type="button" data-tab="calc" class="on">Calculate</button>
+  <button type="button" data-tab="eqn">Equations</button>
+  <button type="button" data-tab="graph">Graph</button>
+  <button type="button" data-tab="stat">Statistics</button>
+  <button type="button" data-tab="matrix">Matrix</button>
+  <button type="button" data-tab="vector">Vector</button>
+  <button type="button" data-tab="calculus">Calculus</button>
+  <button type="button" data-tab="base">Base-N</button>
+  <button type="button" data-tab="units">Units</button>
+  <button type="button" data-tab="const">Constants</button>
+</nav>
+
+<main id="main">
+  <!-- ===== CALCULATE ===== -->
+  <section class="view on" id="view-calc" data-view="calc">
+    <div class="col col-in">
+      <div class="card display" id="display">
+        <div class="status">
+          <button type="button" class="chip" id="angleChip" title="Angle unit: tap to change">DEG</button>
+          <button type="button" class="chip" id="fmtChip" title="Number format: tap to change">Norm</button>
+          <button type="button" class="chip" id="cplxChip" title="Complex numbers: tap to switch">ℝ</button>
+          <span class="chip ghost" id="memChip" hidden title="A value is stored in memory M">M</span>
+          <span class="chip ghost" id="shiftChip" hidden>2nd</span>
+          <span class="grow"></span>
+          <button type="button" class="iconbtn sm" id="kbdBtn" aria-label="Use the phone keyboard" title="Type with the keyboard"><svg class="i"><use href="#i-kbd"/></svg></button>
+          <button type="button" class="iconbtn sm hist-open" id="histBtn" aria-label="History" title="History"><svg class="i"><use href="#i-hist"/></svg></button>
+        </div>
+        <label class="sr" for="expr">Expression</label>
+        <textarea id="expr" class="expr" rows="1" spellcheck="false" autocomplete="off" autocapitalize="off" inputmode="none" placeholder="Tap a sum, e.g. 2(3+4)²"></textarea>
+        <div class="natural" id="natural" aria-hidden="true"></div>
+        <div class="result-row">
+          <div class="result" id="result" aria-live="polite"><span class="muted">0</span></div>
+        </div>
+        <div class="result-sub" id="resultSub"></div>
+        <div class="result-tools">
+          <button type="button" class="pill" id="sdBtn" title="Switch between decimal and exact (fraction, π, √) form">S⇔D</button>
+          <button type="button" class="pill" id="engBtn" title="Show in engineering notation">ENG</button>
+          <button type="button" class="pill" id="dmsBtn" title="Show as degrees, minutes, seconds">°′″</button>
+          <button type="button" class="pill" id="stoBtn" title="Store the answer in a variable">STO →</button>
+          <span class="grow"></span>
+          <button type="button" class="pill" id="copyBtn" title="Copy the answer"><svg class="i"><use href="#i-copy"/></svg>Copy</button>
+        </div>
+      </div>
+
+      <div class="card keys-card">
+        <div class="keybar">
+          <div class="seg" role="tablist" aria-label="Keypad">
+            <button type="button" data-pad="basic" role="tab">Basic</button>
+            <button type="button" data-pad="sci" role="tab">Scientific</button>
+          </div>
+          <span class="grow"></span>
+          <button type="button" class="pill" id="varsBtn" title="Variables A–F, x, y, z and memory M">Vars</button>
+          <button type="button" class="pill" id="fnBtn" title="All functions"><svg class="i"><use href="#i-fn"/></svg>Functions</button>
+        </div>
+        <div class="memrow">
+          <button type="button" class="k mem" data-k="MC" title="Clear memory">MC</button>
+          <button type="button" class="k mem" data-k="MR" title="Recall memory">MR</button>
+          <button type="button" class="k mem" data-k="M+" title="Add answer to memory">M+</button>
+          <button type="button" class="k mem" data-k="M-" title="Subtract answer from memory">M−</button>
+          <button type="button" class="k mem" data-k="Ans" title="Last answer">Ans</button>
+        </div>
+        <div class="pad" id="pad"></div>
+      </div>
+    </div>
+
+    <div class="col col-out">
+      <div class="card side" id="sidePanel">
+        <div class="side-head">
+          <div class="seg" role="tablist" aria-label="Side panel">
+            <button type="button" data-side="hist" class="on">History</button>
+            <button type="button" data-side="vars">Memory &amp; variables</button>
+          </div>
+          <span class="grow"></span>
+          <button type="button" class="pill danger" id="histClear" title="Clear all history"><svg class="i"><use href="#i-trash"/></svg>Clear</button>
+        </div>
+        <div class="side-body" id="histList"></div>
+        <div class="side-body" id="varList" hidden></div>
+      </div>
+      <div class="card tips">
+        <h3>Try these</h3>
+        <div class="examples" id="examples"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-eqn" data-view="eqn"></section>
+  <section class="view" id="view-graph" data-view="graph"></section>
+  <section class="view" id="view-stat" data-view="stat"></section>
+  <section class="view" id="view-matrix" data-view="matrix"></section>
+  <section class="view" id="view-vector" data-view="vector"></section>
+  <section class="view" id="view-calculus" data-view="calculus"></section>
+  <section class="view" id="view-base" data-view="base"></section>
+  <section class="view" id="view-units" data-view="units"></section>
+  <section class="view" id="view-const" data-view="const"></section>
+</main>
+
+<footer class="foot">
+  <span>IBI Scientific Calculator <b id="footVer">v1.0</b> · India Business International · Works offline · Maths engine: math.js 15.2.0 (Apache-2.0)</span>
+</footer>
+
+<div class="banner" id="installBanner" hidden>
+  <svg class="mark" aria-hidden="true"><use href="#i-mark"/></svg>
+  <div class="bt"><b>Install IBI Scientific Calculator</b><span id="installBannerText">Open it from your home screen like any app. Works offline.</span></div>
+  <button type="button" class="btn" id="installBannerBtn">Install</button>
+  <button type="button" class="iconbtn" id="installBannerX" aria-label="Not now"><svg class="i"><use href="#i-x"/></svg></button>
+</div>
+
+<div class="layer-root" id="layerRoot"></div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="lib/math-15.2.0.min.js"></script>
+<script src="app.js?v=1.0"></script>
+<script src="tools.js?v=1.0"></script>
+</body>
+</html>
