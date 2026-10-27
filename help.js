@@ -1,4 +1,4 @@
-/* IBI Scientific Calculator v1.2 — Help assistant. A chat-style "how do I…" helper that runs
+/* IBI Scientific Calculator v1.3 — Help assistant. A chat-style "how do I…" helper that runs
    entirely on the device: a local knowledge base with keyword + fuzzy matching, no AI and no network.
    Minimise (⌄, Esc, Back) keeps the chat; ⟲ starts again; ✕ ends it. Uses window.ISC from app.js. */
 (function () {

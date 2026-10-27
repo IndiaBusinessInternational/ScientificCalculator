@@ -1,4 +1,4 @@
-# IBI Scientific Calculator v1.2
+# IBI Scientific Calculator v1.3
 
 A free scientific calculator web app by India Business International, for school students, college students and professionals. It runs entirely in the browser, installs as an app (PWA) and works offline.
 
@@ -25,10 +25,11 @@ Also: light / dark switch, install banner and Install button, Share button (`ibi
 - `index.html`, `app.css`, `app.js` (engine, Calculate tab, overlays, settings), `tools.js` (the other tabs), `help.js` (help assistant and its knowledge base)
 - `lib/math-15.2.0.min.js`: math.js 15.2.0 (Apache-2.0, licence in `lib/MATHJS-LICENSE.txt`)
 - KaTeX 0.19.0 (MIT) is loaded from jsDelivr for the textbook display; the app works without it.
-- `sw.js` (cache `ibi-scicalc-v1-2`), `manifest.json` (id `/scientific-calculator/`), `icons/`, `og-banner.jpg`, `ibi-share.js`
+- `sw.js` (cache `ibi-scicalc-v1-3`), `manifest.json` (id `/scientific-calculator/`), `icons/`, `og-banner.jpg`, `ibi-share.js`
 
 ## Versions
 
+- **v1.3** (27 Oct 2026): after uninstalling, the button wrongly said "Installed ✓" (v1.2 stored the install in the browser and a page is never told about an uninstall). Now "Installed ✓" only when the device confirms it at that moment (getInstalledRelatedApps, re-checked whenever the page comes back into view) or when it was installed during this visit; the old stored flag is deleted.
 - **v1.2** (27 Oct 2026): Install button always in the header (Installed ✓ once installed, hidden inside the installed app); with no native prompt it opens step-by-step install instructions for the user's browser (Android Chrome, Samsung, Firefox, iPhone Safari/Chrome, Chrome/Edge desktop, Mac Safari, in-app browsers); a dismissible install banner after the first calculation.
 - **v1.1** (27 Oct 2026): Help assistant; brackets in the textbook preview line are brighter.
 - **v1.0** (27 Oct 2026): first release.

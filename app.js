@@ -1,9 +1,9 @@
-/* IBI Scientific Calculator v1.2 — core: maths engine (math.js 15.2.0), number formatting,
+/* IBI Scientific Calculator v1.3 — core: maths engine (math.js 15.2.0), number formatting,
    the Calculate tab, history, memory and variables, settings, overlays, install and backup.
    The other tabs live in tools.js and use window.ISC. */
 (function () {
   'use strict';
-  const VERSION = '1.2';
+  const VERSION = '1.3';
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -1062,7 +1062,16 @@
 
   // ---------- install: the header button is always there (Founder: "Install button must") ----------
   let deferredPrompt = null;
-  let installedKnown = !!LS.get('installedAt', 0);
+  // "Installed" is only ever what the device confirms NOW. A page is never told about an uninstall, so a stored
+  // flag goes stale (v1.2 kept saying "Installed ✓" after the Founder uninstalled it); v1.2's flag is removed here.
+  let installedThisVisit = false, relatedInstalled = false;
+  LS.del('installedAt');
+  const installedKnownNow = () => installedThisVisit || relatedInstalled;
+  // trust: when the user comes back to the page, the device's answer replaces "installed during this visit" too.
+  function checkRelated(trust) {
+    if (!navigator.getInstalledRelatedApps) return;
+    navigator.getInstalledRelatedApps().then((apps) => { relatedInstalled = !!(apps && apps.length); if (trust && !relatedInstalled) installedThisVisit = false; paintInstall(); }).catch(() => { /* not supported here */ });
+  }
   const isInstalled = () => matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: minimal-ui)').matches || navigator.standalone === true;
   const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   function browserKind() {
@@ -1095,28 +1104,29 @@
     const b = $('#installTop');
     b.hidden = inApp;
     document.body.classList.toggle('show-install', !inApp);
-    const done = installedKnown && !deferredPrompt;
+    const done = installedKnownNow() && !deferredPrompt;
     b.querySelector('span').textContent = done ? 'Installed ✓' : 'Install';
     b.title = done ? 'Already installed on this device' : 'Install IBI Scientific Calculator on this device';
     b.setAttribute('aria-label', b.title);
     if (inApp) $('#installBanner').hidden = true;
   }
   function maybeShowBanner() {
-    if (isInstalled() || installedKnown || maybeShowBanner.done) return;
+    if (isInstalled() || installedKnownNow() || maybeShowBanner.done) return;
     if (Date.now() - LS.get('installDismissed', 0) < 24 * 3600 * 1000) return;
     maybeShowBanner.done = true;
     $('#installBanner').hidden = false;
     clearTimeout(maybeShowBanner.t);
     maybeShowBanner.t = setTimeout(() => { $('#installBanner').hidden = true; }, 15000);
   }
-  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installedKnown = false; LS.del('installedAt'); paintInstall(); });
-  window.addEventListener('appinstalled', () => { deferredPrompt = null; installedKnown = true; LS.set('installedAt', Date.now()); $('#installBanner').hidden = true; paintInstall(); toast('Installed. Open IBI Scientific Calculator from your home screen.'); });
-  if (navigator.getInstalledRelatedApps) navigator.getInstalledRelatedApps().then((apps) => { if (apps && apps.length) { installedKnown = true; paintInstall(); } }).catch(() => { /* not supported here */ });
+  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installedThisVisit = false; relatedInstalled = false; paintInstall(); });
+  window.addEventListener('appinstalled', () => { deferredPrompt = null; installedThisVisit = true; $('#installBanner').hidden = true; paintInstall(); toast('Installed. Open IBI Scientific Calculator from your home screen.'); });
+  checkRelated();
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) checkRelated(true); });
   function installGuide() {
     const kind = browserKind();
     const order = [kind].concat(Object.keys(GUIDES).filter((k) => k !== kind && k !== 'other'));
     const block = (k, main) => `<div class="${main ? 'ig-main' : 'ig-other'}"><h3>${GUIDES[k][0]}</h3><ol class="help-list">${GUIDES[k][1].map((x) => `<li>${x}</li>`).join('')}</ol></div>`;
-    const done = installedKnown ? '<div class="msg" style="margin:0 0 10px">It looks like the calculator is already installed on this device. Open it from your home screen or app list.</div>' : '';
+    const done = installedKnownNow() ? '<div class="msg" style="margin:0 0 10px">This device says the calculator is installed. Open it from your home screen or app list. If you removed it, follow the steps below to install it again.</div>' : '';
     const el = openLayer(`<div class="sheet">${sheetHead('Install IBI Scientific Calculator')}<div class="sheet-b">
       ${done}<p style="margin:0 0 10px">Installing puts the calculator on your home screen like an app. It opens full screen and works with no internet. It is free and takes a few seconds.</p>
       ${block(order[0], true)}

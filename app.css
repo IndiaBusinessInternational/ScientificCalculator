@@ -1,4 +1,4 @@
-/* IBI Scientific Calculator v1.2 — styles. Edge to edge at every width (10px inner padding),
+/* IBI Scientific Calculator v1.3 — styles. Edge to edge at every width (10px inner padding),
    two columns from 1000px, 16px body text, light/dark themes. */
 :root {
   --bg: #000; --surface: #101218; --surface2: #181b23; --surface3: #20242e; --line: #2a2f3a;
